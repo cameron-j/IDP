@@ -36,14 +36,14 @@ namespace map {
         unsigned char id; // unique node id (starts from 1, 0 is null)
     } Node;
 
-    extern State prev_state;
-    extern State next_state;
+    static State prev_state;
+    static State next_state;
 
-    extern unsigned char node_count;
+    static unsigned char node_count;
 
     // Start, dropoffs, blocks then junctions
-    extern Node nodes[N_NODES];
-    extern Displacement adj_matrix[N_NODES][N_NODES];
+    static Node nodes[N_NODES];
+    static Displacement adj_matrix[N_NODES][N_NODES];
 
     Node create_node(unsigned char type);
     Node get_node(unsigned char id);
