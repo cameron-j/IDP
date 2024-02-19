@@ -1,18 +1,4 @@
-#define N_NODES 18 // Number of nodes in entire map
-#define N_JUNCTIONS 11
-#define N_BLOCKS 4
-#define N_DROPOFFS 2
-
-#define D_NODE 0 // Dropoff point
-#define S_NODE 1 // Start/finish
-#define J_NODE 2 // Junction
-#define B_NODE 3 // Block
-
-// Directions in reference frame of table
-#define FORWARDS 1
-#define RIGHT 2
-#define LEFT -2
-#define BACKWARDS -1
+#include "map.hpp"
 
 #define START_IDX 0
 #define D1_IDX 1
@@ -33,43 +19,20 @@
 #define J10_IDX N_DROPOFFS+N_BLOCKS+10
 #define J11_IDX N_DROPOFFS+N_BLOCKS+11
 
-// Distance and direction for movement between nodes
-typedef struct Displacement_s {
-    unsigned int dist;
-    char dir;
-} Displacement;
+using namespace map;
 
-// State of the robot at a node
-typedef struct State_s {
-    unsigned char position;
-    char direction;
-} State;
-
-State prev_state;
-State next_state;
-
-unsigned char node_count = 0;
-// Start, dropoffs, blocks then junctions
-Node nodes[N_NODES];
-Displacement adj_matrix[N_NODES][N_NODES];
-
-/*
-Reference frames are used to describe the positions of nodes on the map.
-All directions are relative to the starting orientation.
-*/
-typedef struct Node_s {
-    unsigned char type; // Type of node (D, S, J, B)
-    unsigned char id; // unique node id (starts from 1, 0 is null)
-} Node;
-
-Node create_node(unsigned char type) {
+Node map::create_node(unsigned char type) {
     Node new_node;
     new_node.type = type;
     new_node.id = ++node_count; // First node id is 1 so that 0 can be used as null (no node)
     return new_node;
 }
 
-void connect_nodes(unsigned char n1_idx, unsigned char n2_idx, unsigned int dist, char dir12, char dir21=0) {
+Node map::get_node(unsigned char id) {
+    return nodes[id - 1];
+}
+
+void map::connect_nodes(unsigned char n1_idx, unsigned char n2_idx, unsigned int dist, char dir12, char dir21=0) {
     adj_matrix[nodes[n1_idx].id][nodes[n2_idx].id].dist = dist;
     adj_matrix[nodes[n1_idx].id][nodes[n2_idx].id].dir = dir12;
     adj_matrix[nodes[n2_idx].id][nodes[n1_idx].id].dist = dist;
@@ -81,8 +44,9 @@ void connect_nodes(unsigned char n1_idx, unsigned char n2_idx, unsigned int dist
     }
 }
 
-void setup_map() {
+void map::setup_map() {
     // Creates the nodes
+    node_count = 0;
     int idx = 0;
     nodes[idx++] = create_node(S_NODE);
 
@@ -121,10 +85,12 @@ void setup_map() {
     connect_nodes(J9_IDX, J10_IDX, 35, FORWARDS);
 }
 
-int main() {
-    setup_map();
-
-    // Initialises the position of the robot
-    prev_state.position = START_IDX;
+void map::initialise_robot() {
+    prev_state.position = 1; // 1 is the id of the start node
     prev_state.direction = FORWARDS;
+}
+
+void map::init() {
+    setup_map();
+    initialise_robot();
 }
