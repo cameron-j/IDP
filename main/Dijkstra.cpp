@@ -1,6 +1,9 @@
 #include "map.h" 
 using namespace std;
+#include <string>
 
+int INT_MAX;
+string string1;
 int miniDist(int distance[], bool Tset[]) // finding minimum distance
 {
     int minimum = INT_MAX, ind;
@@ -41,11 +44,13 @@ void DijkstraAlgo(int graph[18][18], int src) // adjacency matrix
                 distance[k] = distance[m] + graph[m][k];
         }
     }
-    cout << "Vertex\t\tDistance from source vertex" << endl;
+    string1 = "Vertex\t\tDistance from source vertex";
+    ///print(string1);
     for (int k = 0; k < 18; k++)
     {
         char str = 65 + k;
-        cout << str << "\t\t\t" << distance[k] << endl;
+        string1 = distance[k];
+        ///print(string1);
     }
 }
 
