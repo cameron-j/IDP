@@ -1,4 +1,5 @@
 #include "map.h"
+#include "motor_control.h"
 
 // Logging levels
 #define LOG_LOW 0
@@ -30,14 +31,34 @@ void log(String msg, int level) {
     }
 }
 
+// Button input
+int buttonPin = 5;
+int button_status;
+int prev_button_status = 0;
+
 // the setup function runs once when you press reset or power the board
 void setup() {
   log_init(LOG_MID);
-  log("Low level message", LOG_LOW);
-  log("Mid level message", LOG_MID);
-  log("High level message", LOG_HIGH);
+  mot_init();
 }
 
 // the loop function runs over and over again forever
 void loop() {
+  button_status = digitalRead(buttonPin);
+  if (button_status == 1 && prev_button_status == 0) {
+    mot_straight(LOWSPEED);
+    log("Low speed", LOG_HIGH);
+    delay(2000);
+    mot_correct_to_right(50);
+    log("Correct right", LOG_HIGH);
+    delay(1000);
+    mot_correct_to_left(100);
+    log("Correct left", LOG_HIGH);
+    delay(1000);
+    mot_correct_to_right(50);
+    log("Correct right", LOG_HIGH);
+    delay(1000);
+    mot_stop();
+  }
+  prev_button_status = button_status;
 }
