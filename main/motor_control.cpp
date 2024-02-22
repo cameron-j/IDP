@@ -4,16 +4,16 @@ Adafruit_DCMotor *leftmotor;
 Adafruit_DCMotor *rightmotor;
 Adafruit_MotorShield AFMS;
 
-int old_speed; // set initial speed so that motor speed functions do not run unnecessarily
+int old_speed = 0; // set initial speed so that motor speed functions do not run unnecessarily
 
 void mot_straight(int speed) {
-  if (speed != old_speed) {
+//  if (speed != old_speed) {
     leftmotor->setSpeed(speed);
     rightmotor->setSpeed(speed);
     leftmotor->run(FORWARD);
     rightmotor->run(FORWARD);
-    old_speed = speed;
-  }
+//    old_speed = speed;
+//  }
 }
 
 void mot_stop() {
@@ -36,19 +36,36 @@ void mot_turn_right(int speed) {
   rightmotor->run(FORWARD);
 }
 
-void mot_correct_to_left(int correction) {
-  leftmotor -> setSpeed(old_speed - correction);
-  rightmotor -> setSpeed(old_speed + correction);
+
+void mot_correct_to_right(int speed) {
+  leftmotor -> setSpeed(speed/10);
+  rightmotor -> setSpeed(speed);
   leftmotor->run(FORWARD);
   rightmotor->run(FORWARD);
 }
 
-void mot_correct_to_right(int correction) {
-  leftmotor -> setSpeed(old_speed + correction);
-  rightmotor -> setSpeed(old_speed - correction);
+void mot_correct_to_left(int speed) {
+  leftmotor -> setSpeed(speed);
+  rightmotor -> setSpeed(speed/10);
   leftmotor->run(FORWARD);
   rightmotor->run(FORWARD);
 }
+
+
+
+// void mot_correct_to_left(int correction) {
+//   leftmotor -> setSpeed(old_speed - correction);
+//   rightmotor -> setSpeed(old_speed + correction);
+//   leftmotor->run(FORWARD);
+//   rightmotor->run(FORWARD);
+// }
+
+// void mot_correct_to_right(int correction) {
+//   leftmotor -> setSpeed(old_speed + correction);
+//   rightmotor -> setSpeed(old_speed - correction);
+//   leftmotor->run(FORWARD);
+//   rightmotor->run(FORWARD);
+// }
 
 void set_rightmotor_speed(int speed) {
   rightmotor -> setSpeed(speed);
@@ -56,6 +73,10 @@ void set_rightmotor_speed(int speed) {
 
 void set_leftmotor_speed(int speed) {
   leftmotor -> setSpeed(speed);
+}
+
+int get_speed() {
+  return old_speed;
 }
 
 void mot_init() {
