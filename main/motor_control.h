@@ -4,22 +4,17 @@
 #include <Adafruit_MotorShield.h>
 #include "utility/Adafruit_MS_PWMServoDriver.h"
 
-#define HIGHSPEED 200 // standard speed when away from junctions
-#define LOWSPEED 100 // standard speed when approaching junctions
-#define TURNSPEED 150 // turning speed
-#define CORRECTION 0.1 // proportional change in motor speed during line following correction
+#define STRAIGHT_SPEED 150
+#define TURN_SPEED 100
+#define CORRECTION_LOW_SPEED 50
+#define CORRECTION_HIGH_SPEED 150
 
-typedef struct MotSpeed_s{
-  int right;
-  int left;
-} MotSpeed;
-
-void mot_straight(int speed);
+void mot_straight();
 void mot_stop();
-void mot_turn_left(int speed);
-void mot_turn_right(int speed);
-void mot_correct_to_left(int correction);
-void mot_correct_to_right(int correction);
+void mot_turn_left();
+void mot_turn_right();
+void mot_correct_to_left();
+void mot_correct_to_right();
 void set_rightmotor_speed(int speed);
 void set_leftmotor_speed(int speed);
 int get_speed();

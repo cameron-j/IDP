@@ -10,23 +10,39 @@
 #define LOG_ERROR 3
 #define LOG_CRITICAL_ERROR 4
 
+// Pins
+#define BUTTON_PIN 9
+
 // Button input
-int buttonPin = 5;
 int button_status;
 int prev_button_status = 0;
+bool run = false;
+bool turned = false;
 
 // the setup function runs once when you press reset or power the board
 void setup() {
   log_init(LOG_MID);
   mot_init();
+  mot_straight();
+  log("Running Straight", LOG_HIGH);
+  delay(1000);
+  mot_stop();
 }
 
 // the loop function runs over and over again forever
 void loop() {
-  button_status = digitalRead(buttonPin);
+  button_status = digitalRead(BUTTON_PIN);
   if (button_status == 1 && prev_button_status == 0) {
-    mot_straight(LOWSPEED);
+    run = !run;
   }
-  update_correction(HIGHSPEED, HIGHSPEED);
+  if (!turned) {
+    if (detect_right_turn()) {
+      right_turn();
+      turned = false;
+    }
+  }
+  if (run) {
+    track_straight();
+  }
   prev_button_status = button_status;
 }
