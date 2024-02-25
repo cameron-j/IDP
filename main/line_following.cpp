@@ -3,20 +3,21 @@
 #include "logging.h"
 #include <arduino.h>
 
-#define PIN1 3
-#define PIN2 4
-#define PIN3 5
-#define PIN4 8
+#define BRPIN 3
+#define FRPIN 4
+#define FLPIN 5
+#define BLPIN 8
 
-// #define WIGGLE_SPEED 100
-// #define WIGGLE_TIME 200
-// #define WIGGLE_FRONTIER 25
+SensorValue read_sensors(){
+  SensorValue s_value;
+  // line sensors
+  s_value.back_right = digitalRead(BRPIN); // right turn sensor
+  s_value.front_right = digitalRead(FRPIN); // right line following
+  s_value.front_left = digitalRead(FLPIN); // left line following
+  s_value.back_left = digitalRead(BLPIN); // left turn sensor
+  return s_value;
+}
 
-// line sensors
-int ls1;
-int ls2; // right line following
-int ls3; // left line following
-int ls4;
 
 int correction = 0;
 
@@ -27,27 +28,23 @@ void line_init() {
 }
 
 void track_straight() {
-    ls1 = digitalRead(PIN1);
-    ls2 = digitalRead(PIN2);
-    ls3 = digitalRead(PIN3);
-    ls4 = digitalRead(PIN4);
-
-    if (ls2 == 0 && ls3 == 0){
+  SensorValue sv = read_sensors();
+    if (sv.front_right == 0 && sv.front_left == 0){
       mot_straight();
       // straight_iterations++;
       log("Straight line", LOG_LOW);
     }
-    if (ls2 == 1 && ls3 == 0){
+    if (sv.front_right == 1 && sv.front_left == 0){
       // straight_iterations = 0;
       mot_correct_to_right();
       log("Turn right", LOG_LOW);
     }
-    if (ls2 == 0 && ls3 == 1){
+    if (sv.front_right == 0 && sv.front_left == 1){
       // straight_iterations = 0;
       mot_correct_to_left();
       log("Turn left", LOG_LOW);
     }
-    if (ls2 == 1 && ls3 == 1){
+    if (sv.front_right == 1 && sv.front_left == 1){
       // straight_iterations = 0;
       mot_straight();
       log("Straight line", LOG_LOW);
@@ -63,11 +60,13 @@ void track_straight() {
 }
 
 bool detect_left_turn() {
-  return (bool)ls4;
+  SensorValue sv = read_sensors();
+  return (bool)sv.back_left;
 }
 
 bool detect_right_turn() {
-  return (bool)ls1;
+  SensorValue sv = read_sensors();
+  return (bool)sv.back_right;
 }
 
 void left_turn() {
@@ -75,23 +74,20 @@ void left_turn() {
   mot_stop();
   int state = 0;
   mot_turn_left();
+  SensorValue sv = read_sensors();
 
   while (state < 3) {
-    ls1 = digitalRead(PIN1);
-    ls2 = digitalRead(PIN2);
-    ls3 = digitalRead(PIN3);
-    ls4 = digitalRead(PIN4);
 
     // Update state
-    if (state == 0 && ls3 == 0) {
+    if (state == 0 && sv.front_left == 0) {
       state = 1;
       log("State 1", LOG_HIGH);
     }
-    else if (state == 1 && ls3 == 1) {
+    else if (state == 1 && sv.front_left == 1) {
       state = 2;
       log("State 2", LOG_HIGH);
     }
-    else if (state == 2 && ls3 == 0) {
+    else if (state == 2 && sv.front_left == 0) {
       state = 3;
       log("State 3", LOG_HIGH);
     }
@@ -103,23 +99,20 @@ void right_turn() {
   mot_stop();
   int state = 0;
   mot_turn_right();
+  SensorValue sv = read_sensors();
 
   while (state < 3) {
-    ls1 = digitalRead(PIN1);
-    ls2 = digitalRead(PIN2);
-    ls3 = digitalRead(PIN3);
-    ls4 = digitalRead(PIN4);
 
     // Update state
-    if (state == 0 && ls2 == 0) {
+    if (state == 0 && sv.front_right == 0) {
       state = 1;
       log("State 1", LOG_HIGH);
     }
-    else if (state == 1 && ls2 == 1) {
+    else if (state == 1 && sv.front_right == 1) {
       state = 2;
       log("State 2", LOG_HIGH);
     }
-    else if (state == 2 && ls2 == 0) {
+    else if (state == 2 && sv.front_right == 0) {
       state = 3;
       log("State 3", LOG_HIGH);
     }

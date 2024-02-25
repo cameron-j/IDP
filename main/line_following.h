@@ -7,3 +7,12 @@ bool detect_right_turn();
 void left_turn();
 void right_turn();
 bool wiggle_check();
+
+typedef struct Sensor_s {
+  int back_right;
+  int front_right;
+  int front_left;
+  int back_left;
+}SensorValue;
+
+SensorValue read_sensors();

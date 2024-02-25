@@ -4,7 +4,7 @@ Adafruit_DCMotor *leftmotor;
 Adafruit_DCMotor *rightmotor;
 Adafruit_MotorShield AFMS;
 
-int old_speed = 0; // set initial speed so that motor speed functions do not run unnecessarily
+// int old_speed = 0; // set initial speed so that motor speed functions do not run unnecessarily
 
 void mot_straight() {
 //  if (speed != old_speed) {
@@ -19,7 +19,7 @@ void mot_straight() {
 void mot_stop() {
   leftmotor->run(RELEASE);
   rightmotor->run(RELEASE);
-  old_speed = 0;
+  //old_speed = 0;
 }
 
 void mot_turn_left() {
@@ -75,14 +75,14 @@ void set_leftmotor_speed(int speed) {
   leftmotor -> setSpeed(speed);
 }
 
-int get_speed() {
-  return old_speed;
-}
+// int get_speed() {
+//   return old_speed;
+// }
 
 void mot_init() {
   AFMS = Adafruit_MotorShield(); 
   leftmotor = AFMS.getMotor(1);
   rightmotor = AFMS.getMotor(2);
   AFMS.begin();
-  old_speed = 0;
+  //old_speed = 0;
 }
