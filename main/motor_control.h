@@ -4,10 +4,10 @@
 #include <Adafruit_MotorShield.h>
 #include "utility/Adafruit_MS_PWMServoDriver.h"
 
-#define STRAIGHT_SPEED 150
-#define TURN_SPEED 100
+#define STRAIGHT_SPEED 175
+#define TURN_SPEED 150
 #define CORRECTION_LOW_SPEED 50
-#define CORRECTION_HIGH_SPEED 150
+#define CORRECTION_HIGH_SPEED 175
 
 void mot_straight();
 void mot_stop();

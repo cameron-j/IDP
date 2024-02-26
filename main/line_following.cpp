@@ -8,6 +8,8 @@
 #define FLPIN 5
 #define BLPIN 8
 
+#define TURN_DELAY 100
+
 SensorValue read_sensors(){
   SensorValue s_value;
   // line sensors
@@ -21,6 +23,8 @@ SensorValue read_sensors(){
 
 int correction = 0;
 
+SensorValue sv;
+
 // int straight_iterations = 0;
 
 void line_init() {
@@ -28,7 +32,7 @@ void line_init() {
 }
 
 void track_straight() {
-  SensorValue sv = read_sensors();
+  sv = read_sensors();
     if (sv.front_right == 0 && sv.front_left == 0){
       mot_straight();
       // straight_iterations++;
@@ -60,23 +64,23 @@ void track_straight() {
 }
 
 bool detect_left_turn() {
-  SensorValue sv = read_sensors();
+  sv = read_sensors();
   return (bool)sv.back_left;
 }
 
 bool detect_right_turn() {
-  SensorValue sv = read_sensors();
+  sv = read_sensors();
   return (bool)sv.back_right;
 }
 
 void left_turn() {
-  delay(100);
+  delay(TURN_DELAY);
   mot_stop();
   int state = 0;
   mot_turn_left();
-  SensorValue sv = read_sensors();
 
   while (state < 3) {
+    sv = read_sensors();
 
     // Update state
     if (state == 0 && sv.front_left == 0) {
@@ -95,13 +99,13 @@ void left_turn() {
 }
 
 void right_turn() {
-  delay(100);
+  delay(TURN_DELAY);
   mot_stop();
   int state = 0;
   mot_turn_right();
-  SensorValue sv = read_sensors();
 
   while (state < 3) {
+    sv = read_sensors();
 
     // Update state
     if (state == 0 && sv.front_right == 0) {

@@ -13,6 +13,10 @@
 // Pins
 #define BUTTON_PIN 9
 
+// Turns
+#define TURN_ITERATION_DELAY 50
+int turn_counter = 0;
+
 // Button input
 int button_status;
 int prev_button_status = 0;
@@ -36,11 +40,20 @@ void loop() {
     run = !run;
   }
   if (!turned) {
-    if (detect_right_turn()) {
-      right_turn();
-      turned = false;
+    if (detect_left_turn()) {
+      left_turn();
+      log("Turned", LOG_HIGH);
+      turned = true;
     }
   }
+  else if (turn_counter < TURN_ITERATION_DELAY) {
+    turn_counter++;
+  }
+  else {
+    turned = false;
+    turn_counter = 0;
+  }
+  
   if (run) {
     track_straight();
   }
