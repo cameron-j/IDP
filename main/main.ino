@@ -2,6 +2,7 @@
 #include "motor_control.h"
 #include "line_following.h"
 #include "logging.h"
+#include "navigation.h"
 
 // Logging levels
 #define LOG_LOW 0
@@ -29,7 +30,7 @@ void setup() {
   mot_init();
   mot_straight();
   log("Running Straight", LOG_HIGH);
-  delay(1000);
+  delay(100);
   mot_stop();
 }
 
@@ -39,23 +40,27 @@ void loop() {
   if (button_status == 1 && prev_button_status == 0) {
     run = !run;
   }
-  if (!turned) {
-    if (detect_left_turn()) {
-      left_turn();
-      log("Turned", LOG_HIGH);
-      turned = true;
-    }
-  }
-  else if (turn_counter < TURN_ITERATION_DELAY) {
-    turn_counter++;
-  }
-  else {
-    turned = false;
-    turn_counter = 0;
-  }
+  // if (!turned) {
+  //   if (detect_right_turn()) {
+  //     right_turn();
+  //     log("Turned", LOG_HIGH);
+  //     turned = true;
+  //   }
+  // }
+  // else if (turn_counter < TURN_ITERATION_DELAY) {
+  //   turn_counter++;
+  // }
+  // else {
+  //   turned = false;
+  //   turn_counter = 0;
+  // }
   
+  navigate("FLFRFRR");
+
   if (run) {
     track_straight();
   }
   prev_button_status = button_status;
+
+
 }

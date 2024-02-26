@@ -73,6 +73,11 @@ bool detect_right_turn() {
   return (bool)sv.back_right;
 }
 
+bool detect_straight() {
+  sv = read_sensors();
+  return (bool)(sv.back_left or sv.back_right);
+}
+
 void left_turn() {
   delay(TURN_DELAY);
   mot_stop();
