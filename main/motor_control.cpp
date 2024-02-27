@@ -22,14 +22,14 @@ void mot_stop() {
   //old_speed = 0;
 }
 
-void mot_turn_left() {
+void mot_turn_right() {
   leftmotor->setSpeed(TURN_SPEED);
   rightmotor->setSpeed(TURN_SPEED);
   leftmotor->run(FORWARD);
   rightmotor->run(BACKWARD);
 }
 
-void mot_turn_right() {
+void mot_turn_left() {
   leftmotor->setSpeed(TURN_SPEED);
   rightmotor->setSpeed(TURN_SPEED);
   leftmotor->run(BACKWARD);
@@ -37,14 +37,14 @@ void mot_turn_right() {
 }
 
 
-void mot_correct_to_right() {
+void mot_correct_to_left() {
   leftmotor -> setSpeed(CORRECTION_LOW_SPEED);
   rightmotor -> setSpeed(CORRECTION_HIGH_SPEED);
   leftmotor->run(FORWARD);
   rightmotor->run(FORWARD);
 }
 
-void mot_correct_to_left() {
+void mot_correct_to_right() {
   leftmotor -> setSpeed(CORRECTION_HIGH_SPEED);
   rightmotor -> setSpeed(CORRECTION_LOW_SPEED);
   leftmotor->run(FORWARD);
