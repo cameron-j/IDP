@@ -16,6 +16,13 @@ void mot_straight() {
 //  }
 }
 
+void mot_reverse() {
+    leftmotor->setSpeed(REVERSE_SPEED);
+    rightmotor->setSpeed(REVERSE_SPEED);
+    leftmotor->run(BACKWARD);
+    rightmotor->run(BACKWARD);
+}
+
 void mot_stop() {
   leftmotor->run(RELEASE);
   rightmotor->run(RELEASE);

@@ -3,6 +3,7 @@
 #include "line_following.h"
 #include "logging.h"
 #include "navigation.h"
+#include "grab.h"
 
 // Logging levels
 #define LOG_LOW 0
@@ -32,6 +33,7 @@ void setup() {
   log("Running Straight", LOG_HIGH);
   delay(100);
   mot_stop();
+  grab_init();
 }
 
 // the loop function runs over and over again forever
@@ -56,7 +58,7 @@ void loop() {
   // }
 
   if (run) {
-   navigate("RFRS");
+   navigate("FLRBLFRZLLS");
    run = false;
   }
 

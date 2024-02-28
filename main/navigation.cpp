@@ -2,6 +2,7 @@
 #include "motor_control.h"
 #include "line_following.h"
 #include "logging.h"
+#include "grab.h"
 
 #define BLOCK_COUNT 4
 #define LOCATION_START 0
@@ -10,6 +11,7 @@
 #define RED 0
 #define BLACK 1
 #define STRAIGHT_ITERATIONS 500
+#define ZONE_REVERSE_TIME 1000
 
 bool instruction_executed;
 
@@ -50,25 +52,29 @@ void navigate (String commands) {
                 log("L", LOG_HIGH);
                 break;
             case 'B':
-            /*  if (detect_block()) {
-                  mot_stop();
-                  pickUpTheBlockAndDetectColour(); 
-                    this should call the pick up function, the detect colour function, and the led function
-                  left_turn();
-            */
-                  instruction_executed = true;
-                  log("B", LOG_HIGH);
-                //}
+              if (check_block_distance()) {
+                mot_stop();
+                grab_block();
+                // pickUpTheBlockAndDetectColour(); 
+                //   this should call the pick up function, the detect colour function, and the led function
+                left_turn();
+                instruction_executed = true;
+                log("B", LOG_HIGH);
+              }
                 break;
             case 'Z':
-            /*  if (detect_zone()) {
-                  mot_stop();
-                  dropOffBlock(); 
-                  left_turn();
-            */
-                  instruction_executed = true;
-                  log("Z", LOG_HIGH);
-                //}
+            if (left_crash_activated() && right_crash_activated()) {
+              mot_stop();
+              deposit_block();
+
+              mot_reverse();
+              delay(ZONE_REVERSE_TIME);
+              mot_stop();
+
+              left_turn();
+              instruction_executed = true;
+              log("Z", LOG_HIGH);
+            }
                 break;
             case 'S':
                 if (detect_straight()) {
