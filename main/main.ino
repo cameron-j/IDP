@@ -54,13 +54,11 @@ void loop() {
   //   turned = false;
   //   turn_counter = 0;
   // }
-  
-  navigate("FLFRFRR");
 
   if (run) {
-    track_straight();
+   navigate("FLFRFRR");
+   run = false;
   }
+
   prev_button_status = button_status;
-
-
 }

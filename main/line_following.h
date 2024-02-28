@@ -7,7 +7,7 @@ bool detect_right_turn();
 bool detect_straight();
 void left_turn();
 void right_turn();
-bool wiggle_check();
+// bool wiggle_check();
 
 typedef struct Sensor_s {
   int back_right;
