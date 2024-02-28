@@ -20,13 +20,13 @@ int turn_counter = 0;
 
 // Button input
 int button_status;
-int prev_button_status = 0;
+int prev_button_status = 1;
 bool run = false;
 bool turned = false;
 
 // the setup function runs once when you press reset or power the board
 void setup() {
-  log_init(LOG_MID);
+  log_init(LOG_HIGH);
   mot_init();
   mot_straight();
   log("Running Straight", LOG_HIGH);
@@ -37,7 +37,7 @@ void setup() {
 // the loop function runs over and over again forever
 void loop() {
   button_status = digitalRead(BUTTON_PIN);
-  if (button_status == 1 && prev_button_status == 0) {
+  if (button_status == 0 && prev_button_status == 1) {
     run = !run;
   }
   // if (!turned) {
@@ -56,7 +56,7 @@ void loop() {
   // }
 
   if (run) {
-   navigate("FLFRFRR");
+   navigate("RFRS");
    run = false;
   }
 

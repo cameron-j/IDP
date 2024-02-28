@@ -14,6 +14,8 @@
 
 #define LED_PERIOD 500
 
+#define STOPPING_ITERATIONS 600
+
 SensorValue read_sensors(){
   SensorValue s_value;
   // line sensors
@@ -43,7 +45,7 @@ void blink_movement_led() {
   if (millis() - previous_led_change >= LED_PERIOD) {
     led_state = !led_state;
     previous_led_change = millis();
-    log("Change LED", LOG_HIGH);
+    log("Change LED", LOG_LOW);
   }
   if (led_state) {
     digitalWrite(INDICATOR_LED_PIN, HIGH);
@@ -124,9 +126,8 @@ void left_turn() {
       state = 3;
       log("State 3", LOG_HIGH);
     }
+    blink_movement_led();
   }
-
-  blink_movement_led();
 }
 
 void right_turn() {
@@ -151,9 +152,20 @@ void right_turn() {
       state = 3;
       log("State 3", LOG_HIGH);
     }
+    blink_movement_led();
   }
+}
 
-  blink_movement_led();
+// TODO: test blinking led here
+void stop_in_the_box() {
+  for (int _ = 0; _ < STOPPING_ITERATIONS; _++) {
+    mot_straight();
+  }
+  // mot_straight();
+  // log("Stopping in the box", LOG_HIGH);
+  // delay(STOPPING_TIME);
+  // log("STOP", LOG_HIGH);
+  mot_stop();
 }
 
 // // Checks that the line is between the sensors
