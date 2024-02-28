@@ -15,10 +15,11 @@ bool instruction_executed;
 
 void navigate (String commands) {
     int counter = 0;
+    bool run = true;
 
     // add in some logging here?
 
-    while (true) {
+    while (run) {
         instruction_executed = false;
         track_straight();
         switch (commands[counter]) {
@@ -49,13 +50,33 @@ void navigate (String commands) {
                 log("L", LOG_HIGH);
                 break;
             case 'B':
-                // moveToBlock();
+            /*  if (detect_block()) {
+                  mot_stop();
+                  pickUpTheBlockAndDetectColour(); 
+                    this should call the pick up function, the detect colour function, and the led function
+                  left_turn();
+            */
+                  instruction_executed = true;
+                  log("B", LOG_HIGH);
+                //}
                 break;
             case 'Z':
-                // moveToZone();
+            /*  if (detect_zone()) {
+                  mot_stop();
+                  dropOffBlock(); 
+                  left_turn();
+            */
+                  instruction_executed = true;
+                  log("Z", LOG_HIGH);
+                //}
                 break;
             case 'S':
-                // stop inside the box
+                if (detect_straight()) {
+                  stop_in_the_box();
+                  // instruction_executed = true;
+                  run = false;
+                  log("S", LOG_HIGH);
+                }
                 break;
             default:
                 track_straight();
