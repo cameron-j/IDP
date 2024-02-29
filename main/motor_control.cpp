@@ -1,4 +1,5 @@
 #include "motor_control.h"
+#include "line_following.h"
 
 Adafruit_DCMotor *leftmotor;
 Adafruit_DCMotor *rightmotor;
@@ -24,6 +25,7 @@ void mot_reverse() {
 }
 
 void mot_stop() {
+  movement_led_off();
   leftmotor->run(RELEASE);
   rightmotor->run(RELEASE);
   //old_speed = 0;

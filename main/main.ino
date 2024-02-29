@@ -58,7 +58,7 @@ void loop() {
   // }
 
   if (run) {
-   navigate("FLRBLFRZLLS");
+   fetchAllTheBlocks();
    run = false;
   }
 

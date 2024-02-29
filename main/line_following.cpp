@@ -8,7 +8,7 @@
 #define FLPIN 5
 #define BLPIN 8
 
-#define INDICATOR_LED_PIN 10
+#define INDICATOR_LED_PIN 6
 
 #define TURN_DELAY 100
 
@@ -53,6 +53,11 @@ void blink_movement_led() {
   else {
     digitalWrite(INDICATOR_LED_PIN, LOW);
   }
+}
+
+void movement_led_off() {
+  log("Movement LED switched off", LOG_MID);
+  digitalWrite(INDICATOR_LED_PIN, LOW);
 }
 
 void track_straight() {
