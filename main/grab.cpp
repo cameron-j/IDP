@@ -1,35 +1,48 @@
 #include "grab.h"
 #include <arduino.h>
 #include <Servo.h>  //include servo library
+#include "logging.h"
 
 #define SENSITIVITY_PIN A3
 #define LEFT_CRASH_PIN 2
 #define RIGHT_CRASH_PIN 9
 
-Servo IDP207servo;  // create servo object to control a servo // twelve servo objects can be created on most boards 
+#define SERVO_DELAY 30
+#define OPEN_POSITION 150
+#define CLOSED_POSITION 0
+#define DEPOSIT_POSITION 180
+
+Servo servo;  // create servo object to control a servo
 int dist_t = 20;
 int sensitivity_t;  
-int pos; int opening_pos = 0; int closing_pos = 260;
+int position;
 
 void grab_init() {     
-  IDP207servo.attach(13);
+  servo.attach(10, 500, 2500);
   PinMode(LEFT_CRASH_PIN, INPUT);
   PinMode(RIGHT_CRASH_PIN, INPUT);
+  servo.write(OPEN_POSITION ); // set initial servo position (position mechanism to be vertical)
 }
 
-void grab_block() {
-   for (pos = opening_pos; pos <= closing_pos; pos += 1) { // goes from 0 degrees to 260 degrees  // in steps of 1 degree     
-    IDP207servo.write(pos);
-    delay(15);
+void grab_block(){
+   for (position = OPEN_POSITION; position >= CLOSED_POSITION; position --) { // goes from open to closed positions in steps of 1 degree     
+    servo.write(position);
+    delay(SERVO_DELAY);
+    log("Angle " + (String)position, LOG_MID);
    }
 }
 
-void deposit_block(){
-   for (pos = closing_pos; pos >= opening_pos; pos -= 1) { // goes from 260 degrees to 0 degrees in steps of 1 degree     
-    IDP207servo.write(pos);
-    delay(15);
+void deposit_block() {
+  servo.write(CLOSED_POSITION);
+  for (position = CLOSED_POSITION; position <= 180; position++) { // goes from open to deposit position in steps of 1 degree     
+    servo.write(pos);
+    delay(SERVO_DELAY);
+    log("Angle " + (String)pos, LOG_MID);
    }
+   delay(500);
+   servo.write(OPEN_POSITION);
 }
+
 
 bool check_block_distance(){
   sensitivity_t = analogRead(SENSITIVITY_PIN);

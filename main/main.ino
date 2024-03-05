@@ -27,7 +27,7 @@ bool turned = false;
 
 // the setup function runs once when you press reset or power the board
 void setup() {
-  log_init(LOG_HIGH);
+  log_init(LOG_MID);
   mot_init();
   mot_straight();
   log("Running Straight", LOG_HIGH);
@@ -58,7 +58,9 @@ void loop() {
   // }
 
   if (run) {
-   fetchAllTheBlocks();
+    grab_block();
+    delay(1000);
+    deposit_block();
    run = false;
   }
 

@@ -4,7 +4,7 @@
 #include <arduino.h>
 
 #define IR_SENSOR_PIN 12
-#define RED_LED_PIN 10
+#define RED_LED_PIN 13
 #define GREEN_LED_PIN 11
 
 void colour_detection_init() {
