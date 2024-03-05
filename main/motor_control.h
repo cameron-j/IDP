@@ -4,7 +4,7 @@
 #include <Adafruit_MotorShield.h>
 #include "utility/Adafruit_MS_PWMServoDriver.h"
 
-#define STRAIGHT_SPEED 175
+#define STRAIGHT_SPEED 190
 #define REVERSE_SPEED 150
 #define TURN_SPEED 150
 #define CORRECTION_LOW_SPEED 50

@@ -58,10 +58,8 @@ void loop() {
   // }
 
   if (run) {
-    grab_block();
-    delay(1000);
-    deposit_block();
-   run = false;
+    fetchAllTheBlocks();
+    run = false;
   }
 
   prev_button_status = button_status;

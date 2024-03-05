@@ -3,18 +3,18 @@
 #include <Servo.h>  //include servo library
 #include "logging.h"
 
-#define SENSITIVITY_PIN A3
+#define ULTRASOUND_PIN A3
 #define LEFT_CRASH_PIN 2
 #define RIGHT_CRASH_PIN 9
 
 #define SERVO_DELAY 30
-#define OPEN_POSITION 150
+#define OPEN_POSITION 100
 #define CLOSED_POSITION 0
 #define DEPOSIT_POSITION 180
 
 Servo servo;  // create servo object to control a servo
 int dist_t = 20;
-int sensitivity_t;  
+int ultrasound_t;  
 int position;
 
 void grab_init() {     
@@ -35,9 +35,9 @@ void grab_block(){
 void deposit_block() {
   servo.write(CLOSED_POSITION);
   for (position = CLOSED_POSITION; position <= 180; position++) { // goes from open to deposit position in steps of 1 degree     
-    servo.write(pos);
+    servo.write(position);
     delay(SERVO_DELAY);
-    log("Angle " + (String)pos, LOG_MID);
+    log("Angle " + (String)position, LOG_MID);
    }
    delay(500);
    servo.write(OPEN_POSITION);
@@ -45,8 +45,8 @@ void deposit_block() {
 
 
 bool check_block_distance(){
-  sensitivity_t = analogRead(SENSITIVITY_PIN);
-  dist_t = sensitivity_t * MAX_RANGE  / ADC_SOLUTION;   
+  ultrasound_t = analogRead(ULTRASOUND_PIN);
+  dist_t = ultrasound_t * MAX_RANGE  / ADC_SOLUTION;   
   if (dist_t < GRABBING_DISTANCE){
     return true;
   }
@@ -54,9 +54,9 @@ bool check_block_distance(){
 }
 
 bool left_crash_activated() {
-  return !digitalRead(LEFT_CRASH_PIN);
+  return !digitalRead(LEFT_CRASH_PIN); // crash sensor is active low => this function returns true is sensor activated
 }
 
 bool right_crash_activated() {
-  return !digitalRead(RIGHT_CRASH_PIN);
+  return !digitalRead(RIGHT_CRASH_PIN); // crash sensor is active low => this function returns true is sensor activated
 }

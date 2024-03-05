@@ -41,7 +41,7 @@ void line_init() {
 }
 
 void blink_movement_led() {
-  log("Blink LED", LOG_MID);
+  log("Blink LED", LOG_LOW);
   if (millis() - previous_led_change >= LED_PERIOD) {
     led_state = !led_state;
     previous_led_change = millis();
