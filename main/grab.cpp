@@ -8,7 +8,7 @@
 #define RIGHT_CRASH_PIN 9
 
 #define SERVO_DELAY 30
-#define OPEN_POSITION 100
+#define OPEN_POSITION 98
 #define CLOSED_POSITION 0
 #define DEPOSIT_POSITION 180
 
@@ -32,9 +32,9 @@ void grab_block(){
    }
 }
 
-void deposit_block() {
+void deposit_block() { // for final version: change OPEN_POSITION to DEPOSIT_POSITION
   servo.write(CLOSED_POSITION);
-  for (position = CLOSED_POSITION; position <= 180; position++) { // goes from open to deposit position in steps of 1 degree     
+  for (position = CLOSED_POSITION; position <= OPEN_POSITION; position++) { // goes from open to deposit position in steps of 1 degree     
     servo.write(position);
     delay(SERVO_DELAY);
     log("Angle " + (String)position, LOG_MID);

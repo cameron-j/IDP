@@ -49,6 +49,8 @@ void navigate (String commands) {
                 break;
             case 'B':
               if (check_block_distance()) {
+                mot_straight();
+                delay(200);
                 mot_stop();
                 grab_block();
                 blink_LED(detect_colour());
