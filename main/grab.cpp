@@ -32,15 +32,26 @@ void grab_block(){
    }
 }
 
-void deposit_block() { // for final version: change OPEN_POSITION to DEPOSIT_POSITION
+void deposit_block() { // for final version: change OPEN_POSITION to DEPOSIT_POSITION ?? maybe not
   servo.write(CLOSED_POSITION);
-  for (position = CLOSED_POSITION; position <= OPEN_POSITION; position++) { // goes from open to deposit position in steps of 1 degree     
-    servo.write(position);
-    delay(SERVO_DELAY);
-    log("Angle " + (String)position, LOG_MID);
-   }
-   delay(500);
-   servo.write(OPEN_POSITION);
+  servo.write(DEPOSIT_POSITION);
+  delay(1500);
+  servo.write(OPEN_POSITION);
+  delay(1000);
+  // for (position = CLOSED_POSITION; position <= OPEN_POSITION; position++) { // goes from closed to open position in steps of 1 degree     
+  //   servo.write(position);
+  //   delay(SERVO_DELAY);
+  //   log("Angle " + (String)position, LOG_MID);
+  //  }
+    // mot_reverse();
+    // delay(200);
+  // for (position = OPEN_POSITION; position <= DEPOSIT_POSITION; position++) { // goes from open to deposit position in steps of 1 degree     
+  //   servo.write(position);
+  //   delay(SERVO_DELAY);
+  //   log("Angle " + (String)position, LOG_MID);
+  //  }
+  //  mot_straight();
+  //  delay(150);
 }
 
 

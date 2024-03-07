@@ -6,9 +6,9 @@
 
 #define STRAIGHT_SPEED 200
 #define REVERSE_SPEED 150
-#define TURN_SPEED 200
-#define CORRECTION_LOW_SPEED 75
-#define CORRECTION_HIGH_SPEED 225
+#define TURN_SPEED 180
+#define CORRECTION_LOW_SPEED 40
+#define CORRECTION_HIGH_SPEED 235
 
 void mot_straight();
 void mot_reverse();

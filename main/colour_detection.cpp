@@ -33,7 +33,7 @@ void blink_LED(int colour){
     digitalWrite(GREEN_LED_PIN, HIGH);
     log("Detected black", LOG_HIGH);
   }
-  delay(6000);
+  delay(5000);
 
   digitalWrite(GREEN_LED_PIN, LOW);
   digitalWrite(RED_LED_PIN, LOW);

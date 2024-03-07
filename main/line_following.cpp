@@ -14,7 +14,7 @@
 
 #define LED_PERIOD 500
 
-#define STOPPING_ITERATIONS 600
+#define STOPPING_ITERATIONS 9000
 
 SensorValue read_sensors(){
   SensorValue s_value;
@@ -28,6 +28,8 @@ SensorValue read_sensors(){
 
 
 int correction = 0;
+
+int state_count = 0;
 
 SensorValue sv;
 
@@ -120,16 +122,34 @@ void left_turn() {
 
     // Update state
     if (state == 0 && sv.front_left == 0) {
-      state = 1;
-      log("State 1", LOG_HIGH);
+      if (state_count == 5) {
+        state = 1;
+        log("State 1", LOG_HIGH);
+        state_count = 0;
+      }
+      else {
+        state_count++;
+      }
     }
     else if (state == 1 && sv.front_left == 1) {
-      state = 2;
-      log("State 2", LOG_HIGH);
+      if (state_count == 5) {
+        state = 2;
+        log("State 2", LOG_HIGH);
+        state_count = 0;
+      }
+      else {
+        state_count++;
+      }
     }
     else if (state == 2 && sv.front_left == 0) {
-      state = 3;
-      log("State 3", LOG_HIGH);
+      if (state_count == 5) {
+        state = 3;
+        log("State 3", LOG_HIGH);
+        state_count = 0;
+      }
+      else {
+        state_count++;
+      }
     }
     blink_movement_led();
   }
@@ -146,16 +166,34 @@ void right_turn() {
 
     // Update state
     if (state == 0 && sv.front_right == 0) {
-      state = 1;
-      log("State 1", LOG_HIGH);
+      if (state_count == 5) {
+        state = 1;
+        log("State 1", LOG_HIGH);
+        state_count = 0;
+      }
+      else {
+        state_count++;
+      }
     }
     else if (state == 1 && sv.front_right == 1) {
-      state = 2;
-      log("State 2", LOG_HIGH);
+      if (state_count == 5) {
+        state = 2;
+        log("State 2", LOG_HIGH);
+        state_count = 0;
+      }
+      else {
+        state_count++;
+      }
     }
     else if (state == 2 && sv.front_right == 0) {
-      state = 3;
-      log("State 3", LOG_HIGH);
+      if (state_count == 5) {
+        state = 3;
+        log("State 3", LOG_HIGH);
+        state_count = 0;
+      }
+      else {
+        state_count++;
+      }
     }
     blink_movement_led();
   }
@@ -163,13 +201,8 @@ void right_turn() {
 
 // TODO: test blinking led here
 void stop_in_the_box() {
-  for (int _ = 0; _ < STOPPING_ITERATIONS; _++) {
-    mot_straight();
-  }
-  // mot_straight();
-  // log("Stopping in the box", LOG_HIGH);
-  // delay(STOPPING_TIME);
-  // log("STOP", LOG_HIGH);
+  mot_straight();
+  delay(1500);
   mot_stop();
 }
 

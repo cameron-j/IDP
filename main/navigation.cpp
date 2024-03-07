@@ -11,7 +11,7 @@
 #define LOCATION_GREEN 2
 #define RED 0
 #define BLACK 1
-#define STRAIGHT_ITERATIONS 500
+#define STRAIGHT_ITERATIONS 5000
 #define ZONE_REVERSE_TIME 1000
 
 bool instruction_executed;
@@ -50,10 +50,12 @@ void navigate (String commands) {
             case 'B':
               if (check_block_distance()) {
                 mot_straight();
-                delay(200);
+                delay(450);
                 mot_stop();
                 grab_block();
                 blink_LED(detect_colour());
+                mot_reverse();
+                delay(400);
                 left_turn();
                 instruction_executed = true;
                 log("B", LOG_HIGH);
@@ -90,14 +92,10 @@ void navigate (String commands) {
             case 'S':
                 if (detect_straight()) {
                   stop_in_the_box();
-                  // instruction_executed = true;
                   log("S", LOG_HIGH);
                   return;
                 }
                 break;
-            // default:
-            //     track_straight();
-            //     break;
         }
 
         if (instruction_executed) {

@@ -1,80 +1,96 @@
 #include "motor_control.h"
 #include "line_following.h"
 
+#define STATE_STRAIGHT 0
+#define STATE_REVERSE 1
+#define STATE_STOP 2
+#define STATE_TURN_RIGHT 3
+#define STATE_TURN_LEFT 4
+#define STATE_CORRECT_RIGHT 5
+#define STATE_CORRECT_LEFT 6
+
+int current_state = STATE_STOP;
+
 Adafruit_DCMotor *leftmotor;
 Adafruit_DCMotor *rightmotor;
 Adafruit_MotorShield AFMS;
 
-// int old_speed = 0; // set initial speed so that motor speed functions do not run unnecessarily
-
 void mot_straight() {
-//  if (speed != old_speed) {
+  if (current_state != STATE_STRAIGHT) {
     leftmotor->setSpeed(STRAIGHT_SPEED);
     rightmotor->setSpeed(STRAIGHT_SPEED);
     leftmotor->run(FORWARD);
     rightmotor->run(FORWARD);
-//    old_speed = speed;
-//  }
+
+    current_state = STATE_STRAIGHT;
+  }
 }
 
 void mot_reverse() {
+  if (current_state != STATE_REVERSE) {
     leftmotor->setSpeed(REVERSE_SPEED);
     rightmotor->setSpeed(REVERSE_SPEED);
     leftmotor->run(BACKWARD);
     rightmotor->run(BACKWARD);
+
+    current_state = STATE_REVERSE;
+  }
 }
 
 void mot_stop() {
-  movement_led_off();
-  leftmotor->run(RELEASE);
-  rightmotor->run(RELEASE);
-  //old_speed = 0;
+  if (current_state != STATE_STOP) {
+    movement_led_off();
+    leftmotor->run(RELEASE);
+    rightmotor->run(RELEASE);
+
+    current_state = STATE_STOP;
+  }
 }
 
 void mot_turn_right() {
-  leftmotor->setSpeed(TURN_SPEED);
-  rightmotor->setSpeed(TURN_SPEED);
-  leftmotor->run(FORWARD);
-  rightmotor->run(BACKWARD);
+  if (current_state != STATE_TURN_RIGHT) {
+    leftmotor->setSpeed(TURN_SPEED);
+    rightmotor->setSpeed(TURN_SPEED);
+    leftmotor->run(FORWARD);
+    rightmotor->run(BACKWARD);
+
+    current_state = STATE_TURN_RIGHT;
+  }
 }
 
 void mot_turn_left() {
-  leftmotor->setSpeed(TURN_SPEED);
-  rightmotor->setSpeed(TURN_SPEED);
-  leftmotor->run(BACKWARD);
-  rightmotor->run(FORWARD);
+  if (current_state != STATE_TURN_LEFT) {
+    leftmotor->setSpeed(TURN_SPEED);
+    rightmotor->setSpeed(TURN_SPEED);
+    leftmotor->run(BACKWARD);
+    rightmotor->run(FORWARD);
+
+    current_state = STATE_TURN_LEFT;
+  }
 }
 
 
 void mot_correct_to_left() {
-  leftmotor -> setSpeed(CORRECTION_LOW_SPEED);
-  rightmotor -> setSpeed(CORRECTION_HIGH_SPEED);
-  leftmotor->run(FORWARD);
-  rightmotor->run(FORWARD);
+  if (current_state != STATE_CORRECT_LEFT) {
+    leftmotor -> setSpeed(CORRECTION_LOW_SPEED);
+    rightmotor -> setSpeed(CORRECTION_HIGH_SPEED);
+    leftmotor->run(FORWARD);
+    rightmotor->run(FORWARD);
+
+    current_state = STATE_CORRECT_LEFT;
+  }
 }
 
 void mot_correct_to_right() {
-  leftmotor -> setSpeed(CORRECTION_HIGH_SPEED);
-  rightmotor -> setSpeed(CORRECTION_LOW_SPEED);
-  leftmotor->run(FORWARD);
-  rightmotor->run(FORWARD);
+  if (current_state != STATE_CORRECT_RIGHT) {
+    leftmotor -> setSpeed(CORRECTION_HIGH_SPEED);
+    rightmotor -> setSpeed(CORRECTION_LOW_SPEED);
+    leftmotor->run(FORWARD);
+    rightmotor->run(FORWARD);
+
+    current_state = STATE_CORRECT_RIGHT;
+  }
 }
-
-
-
-// void mot_correct_to_left(int correction) {
-//   leftmotor -> setSpeed(old_speed - correction);
-//   rightmotor -> setSpeed(old_speed + correction);
-//   leftmotor->run(FORWARD);
-//   rightmotor->run(FORWARD);
-// }
-
-// void mot_correct_to_right(int correction) {
-//   leftmotor -> setSpeed(old_speed + correction);
-//   rightmotor -> setSpeed(old_speed - correction);
-//   leftmotor->run(FORWARD);
-//   rightmotor->run(FORWARD);
-// }
 
 void set_rightmotor_speed(int speed) {
   rightmotor -> setSpeed(speed);
@@ -84,14 +100,9 @@ void set_leftmotor_speed(int speed) {
   leftmotor -> setSpeed(speed);
 }
 
-// int get_speed() {
-//   return old_speed;
-// }
-
 void mot_init() {
   AFMS = Adafruit_MotorShield(); 
   leftmotor = AFMS.getMotor(1);
   rightmotor = AFMS.getMotor(2);
   AFMS.begin();
-  //old_speed = 0;
 }
