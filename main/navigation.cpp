@@ -13,41 +13,46 @@
 #define BLACK 1
 #define STRAIGHT_ITERATIONS 5000
 #define ZONE_REVERSE_TIME 1000
+#define PICKUP_REVERSE_TIME 1000
 
 bool instruction_executed;
+
+bool left_junction_sensor;
+bool right_junction_sensor;
 
 void navigate (String commands) {
     int counter = 0;
     bool run = true;
 
-    // add in some logging here?
-
     while (counter < commands.length()) {
         instruction_executed = false;
         track_straight();
-        switch (commands[counter]) {
+        left_junction_sensor = read_left_junction_sensor();
+        right_junction_sensor = read_right_junction_sensor();
 
+        switch (commands[counter]) {
             case 'F':
-                if (detect_straight()) {
+                if (left_junction_sensor || right_junction_sensor) {
                   instruction_executed = true;
                   log("F", LOG_HIGH);
                 }
                 break;
             case 'L':
-                if (detect_left_turn()) {
+                if (left_junction_sensor) {
                   left_turn();
                   instruction_executed = true;
                   log("L", LOG_HIGH);
                 }
                 break;
             case 'R':
-                if (detect_right_turn()) {
+                if (right_junction_sensor) {
                   right_turn();
                   instruction_executed = true;
                   log("R", LOG_HIGH);
                 }
                 break;
             case 'B':
+              prepare_for_grab();
               if (check_block_distance()) {
                 mot_straight();
                 delay(450);
@@ -90,7 +95,7 @@ void navigate (String commands) {
             }
                 break;                
             case 'S':
-                if (detect_straight()) {
+                if (left_junction_sensor && right_junction_sensor) {
                   stop_in_the_box();
                   log("S", LOG_HIGH);
                   return;
@@ -111,11 +116,11 @@ void navigate (String commands) {
 int fetchBlock (int location, int block) {
 
     // empty strings to block 0 as this is always accessed from start box
-    String fromRedToBlock[BLOCK_COUNT] = {"","FLLB","FFLB","FFFLRB"};
-    String fromGreenToBlock[BLOCK_COUNT] = {"","FRFRB","FFFRB","FFRRB"};
+    String fromRedToBlock[BLOCK_COUNT] = {"","FLLB","FLFRFRRB","FLFRLB"};
+    String fromGreenToBlock[BLOCK_COUNT] = {"","FRFRB","FRLFRRB","FRLLB"};
 
-    String fromBlockToRed[BLOCK_COUNT] = {"LFRY","RRFY","RFFY","LRFFFY"};
-    String fromBlockToGreen[BLOCK_COUNT] = {"RLX","LFLFX","LFFFX","LLFFX"};
+    String fromBlockToRed[BLOCK_COUNT] = {"LFRY","RRFY","LLFLFRFY","RLFRFY"};
+    String fromBlockToGreen[BLOCK_COUNT] = {"RLX","LFLFX","LLFRLFX","RRLFX"};
 
     // add some logging here?
 

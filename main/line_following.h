@@ -2,9 +2,11 @@
 
 void line_init();
 void track_straight();
-bool detect_left_turn();
-bool detect_right_turn();
-bool detect_straight();
+// bool detect_left_turn();
+// bool detect_right_turn();
+// bool detect_straight();
+bool read_left_junction_sensor();
+bool read_right_junction_sensor();
 void left_turn();
 void right_turn();
 void stop_in_the_box();

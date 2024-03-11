@@ -7,6 +7,7 @@
 
 void grab_init();   
 void grab_block();
+void prepare_for_grab();
 void deposit_block();
 bool check_block_distance();
 bool left_crash_activated();

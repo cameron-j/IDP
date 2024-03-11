@@ -2,20 +2,23 @@
 #include <arduino.h>
 #include <Servo.h>  //include servo library
 #include "logging.h"
+#include "motor_control.h"
 
 #define ULTRASOUND_PIN A3
 #define LEFT_CRASH_PIN 2
 #define RIGHT_CRASH_PIN 9
 
 #define SERVO_DELAY 30
-#define OPEN_POSITION 98
+#define OPEN_POSITION 100
 #define CLOSED_POSITION 0
 #define DEPOSIT_POSITION 180
+#define PICKUP_POSITION 80
 
 Servo servo;  // create servo object to control a servo
 int dist_t = 20;
 int ultrasound_t;  
 int position;
+bool grab_ready = false;
 
 void grab_init() {     
   servo.attach(10, 500, 2500);
@@ -24,12 +27,22 @@ void grab_init() {
   servo.write(OPEN_POSITION ); // set initial servo position (position mechanism to be vertical)
 }
 
+void prepare_for_grab() {
+  if (!grab_ready) {
+    mot_stop();
+    servo.write(PICKUP_POSITION);
+    grab_ready = true;
+    delay(1000);
+  }
+}
+
 void grab_block(){
-   for (position = OPEN_POSITION; position >= CLOSED_POSITION; position --) { // goes from open to closed positions in steps of 1 degree     
+   for (position = PICKUP_POSITION; position >= CLOSED_POSITION; position --) { // goes from open to closed positions in steps of 1 degree     
     servo.write(position);
     delay(SERVO_DELAY);
     log("Angle " + (String)position, LOG_MID);
    }
+   grab_ready = false;
 }
 
 void deposit_block() { // for final version: change OPEN_POSITION to DEPOSIT_POSITION ?? maybe not

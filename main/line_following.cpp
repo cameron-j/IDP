@@ -14,7 +14,9 @@
 
 #define LED_PERIOD 500
 
-#define STOPPING_ITERATIONS 9000
+#define STOPPING_TIME 1100
+
+#define STATE_ITERATION_LIMIT 50
 
 SensorValue read_sensors(){
   SensorValue s_value;
@@ -63,23 +65,24 @@ void movement_led_off() {
 }
 
 void track_straight() {
-  sv = read_sensors();
-  if (sv.front_right == 0 && sv.front_left == 0){
+  bool front_right = digitalRead(FRPIN);
+  bool front_left = digitalRead(FLPIN);
+  if (front_right == 0 && front_left == 0){
     mot_straight();
     // straight_iterations++;
     log("Straight line", LOG_LOW);
   }
-  if (sv.front_right == 1 && sv.front_left == 0){
+  if (front_right == 1 && front_left == 0){
     // straight_iterations = 0;
     mot_correct_to_right();
     log("Turn right", LOG_LOW);
   }
-  if (sv.front_right == 0 && sv.front_left == 1){
+  if (front_right == 0 && front_left == 1){
     // straight_iterations = 0;
     mot_correct_to_left();
     log("Turn left", LOG_LOW);
   }
-  if (sv.front_right == 1 && sv.front_left == 1){
+  if (front_right == 1 && front_left == 1){
     // straight_iterations = 0;
     mot_straight();
     log("Straight line", LOG_LOW);
@@ -96,19 +99,27 @@ void track_straight() {
   // }
 }
 
-bool detect_left_turn() {
-  sv = read_sensors();
-  return (bool)sv.back_left;
+// bool detect_left_turn() {
+//   sv = read_sensors();
+//   return (bool)sv.back_left;
+// }
+
+// bool detect_right_turn() {
+//   sv = read_sensors();
+//   return (bool)sv.back_right;
+// }
+
+// bool detect_straight() {
+//   sv = read_sensors();
+//   return (bool)(sv.back_left or sv.back_right);
+// }
+
+bool read_left_junction_sensor() {
+  return digitalRead(BLPIN);
 }
 
-bool detect_right_turn() {
-  sv = read_sensors();
-  return (bool)sv.back_right;
-}
-
-bool detect_straight() {
-  sv = read_sensors();
-  return (bool)(sv.back_left or sv.back_right);
+bool read_right_junction_sensor() {
+  return digitalRead(BRPIN);
 }
 
 void left_turn() {
@@ -118,11 +129,11 @@ void left_turn() {
   mot_turn_left();
 
   while (state < 3) {
-    sv = read_sensors();
+    bool front_left = digitalRead(FLPIN);
 
     // Update state
-    if (state == 0 && sv.front_left == 0) {
-      if (state_count == 5) {
+    if (state == 0 && front_left == 0) {
+      if (state_count == STATE_ITERATION_LIMIT) {
         state = 1;
         log("State 1", LOG_HIGH);
         state_count = 0;
@@ -131,8 +142,8 @@ void left_turn() {
         state_count++;
       }
     }
-    else if (state == 1 && sv.front_left == 1) {
-      if (state_count == 5) {
+    else if (state == 1 && front_left == 1) {
+      if (state_count == STATE_ITERATION_LIMIT) {
         state = 2;
         log("State 2", LOG_HIGH);
         state_count = 0;
@@ -141,8 +152,8 @@ void left_turn() {
         state_count++;
       }
     }
-    else if (state == 2 && sv.front_left == 0) {
-      if (state_count == 5) {
+    else if (state == 2 && front_left == 0) {
+      if (state_count == STATE_ITERATION_LIMIT) {
         state = 3;
         log("State 3", LOG_HIGH);
         state_count = 0;
@@ -162,11 +173,11 @@ void right_turn() {
   mot_turn_right();
 
   while (state < 3) {
-    sv = read_sensors();
+    bool front_right = digitalRead(FRPIN);
 
     // Update state
-    if (state == 0 && sv.front_right == 0) {
-      if (state_count == 5) {
+    if (state == 0 && front_right == 0) {
+      if (state_count == STATE_ITERATION_LIMIT) {
         state = 1;
         log("State 1", LOG_HIGH);
         state_count = 0;
@@ -175,8 +186,8 @@ void right_turn() {
         state_count++;
       }
     }
-    else if (state == 1 && sv.front_right == 1) {
-      if (state_count == 5) {
+    else if (state == 1 && front_right == 1) {
+      if (state_count == STATE_ITERATION_LIMIT) {
         state = 2;
         log("State 2", LOG_HIGH);
         state_count = 0;
@@ -185,8 +196,8 @@ void right_turn() {
         state_count++;
       }
     }
-    else if (state == 2 && sv.front_right == 0) {
-      if (state_count == 5) {
+    else if (state == 2 && front_right == 0) {
+      if (state_count == STATE_ITERATION_LIMIT) {
         state = 3;
         log("State 3", LOG_HIGH);
         state_count = 0;
@@ -202,7 +213,7 @@ void right_turn() {
 // TODO: test blinking led here
 void stop_in_the_box() {
   mot_straight();
-  delay(1500);
+  delay(STOPPING_TIME);
   mot_stop();
 }
 
