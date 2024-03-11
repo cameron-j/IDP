@@ -27,7 +27,7 @@ void navigate (String commands) {
 
     while (counter < commands.length()) {
         instruction_executed = false;
-        track_straight();
+        track_straight(STRAIGHT_SPEED);
         left_junction_sensor = read_left_junction_sensor();
         right_junction_sensor = read_right_junction_sensor();
 
@@ -55,6 +55,8 @@ void navigate (String commands) {
             case 'B':
               prepare_for_grab();
               if (check_block_distance()) {
+                mot_straight(APPROACH_SPEED);
+                delay(450);
                 mot_stop();
                 delay(10000000000);
                 // mot_straight(APPROACH_SPEED);
@@ -108,7 +110,7 @@ void navigate (String commands) {
 
         if (instruction_executed) {
           for (int _ = 0; _ < STRAIGHT_ITERATIONS; _++) {
-            track_straight();
+            track_straight(STRAIGHT_SPEED);
           }
           counter++;
         }
