@@ -25,7 +25,7 @@ bool run = false;
 void setup() {
   log_init(LOG_MID);
   mot_init();
-  mot_straight();
+  mot_straight(STRAIGHT_SPEED);
   log("Running Straight", LOG_HIGH);
   delay(100);
   mot_stop();

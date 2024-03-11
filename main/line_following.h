@@ -1,7 +1,8 @@
 #pragma once
+#include "motor_control.h"
 
 void line_init();
-void track_straight();
+void track_straight(int speed);
 // bool detect_left_turn();
 // bool detect_right_turn();
 // bool detect_straight();

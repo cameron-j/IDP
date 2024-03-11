@@ -15,10 +15,10 @@ Adafruit_DCMotor *leftmotor;
 Adafruit_DCMotor *rightmotor;
 Adafruit_MotorShield AFMS;
 
-void mot_straight() {
+void mot_straight(int speed) {
   if (current_state != STATE_STRAIGHT) {
-    leftmotor->setSpeed(STRAIGHT_SPEED);
-    rightmotor->setSpeed(STRAIGHT_SPEED);
+    leftmotor->setSpeed(speed);
+    rightmotor->setSpeed(speed);
     leftmotor->run(FORWARD);
     rightmotor->run(FORWARD);
 

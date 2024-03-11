@@ -10,7 +10,7 @@
 #define CORRECTION_LOW_SPEED 110
 #define CORRECTION_HIGH_SPEED 235
 
-void mot_straight();
+void mot_straight(int speed);
 void mot_reverse();
 void mot_stop();
 void mot_turn_left();

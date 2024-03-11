@@ -14,6 +14,7 @@
 #define STRAIGHT_ITERATIONS 5000
 #define ZONE_REVERSE_TIME 1000
 #define PICKUP_REVERSE_TIME 1000
+#define APPROACH_SPEED 125
 
 bool instruction_executed;
 
@@ -54,16 +55,18 @@ void navigate (String commands) {
             case 'B':
               prepare_for_grab();
               if (check_block_distance()) {
-                mot_straight();
-                delay(450);
                 mot_stop();
-                grab_block();
-                blink_LED(detect_colour());
-                mot_reverse();
-                delay(400);
-                left_turn();
-                instruction_executed = true;
-                log("B", LOG_HIGH);
+                delay(10000000000);
+                // mot_straight(APPROACH_SPEED);
+                // delay(500);
+                // mot_stop();
+                // grab_block();
+                // blink_LED(detect_colour());
+                // mot_reverse();
+                // delay(600);
+                // left_turn();
+                // instruction_executed = true;
+                // log("B", LOG_HIGH);
               }
                 break;
             case 'X': //green zone

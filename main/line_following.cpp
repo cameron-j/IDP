@@ -1,5 +1,4 @@
 #include "line_following.h"
-#include "motor_control.h"
 #include "logging.h"
 #include <arduino.h>
 
@@ -16,7 +15,8 @@
 
 #define STOPPING_TIME 1100
 
-#define STATE_ITERATION_LIMIT 50
+#define STATE_ITERATION_LIMIT 150
+
 
 SensorValue read_sensors(){
   SensorValue s_value;
@@ -64,11 +64,11 @@ void movement_led_off() {
   digitalWrite(INDICATOR_LED_PIN, LOW);
 }
 
-void track_straight() {
+void track_straight(int speed) {
   bool front_right = digitalRead(FRPIN);
   bool front_left = digitalRead(FLPIN);
   if (front_right == 0 && front_left == 0){
-    mot_straight();
+    mot_straight(speed);
     // straight_iterations++;
     log("Straight line", LOG_LOW);
   }
@@ -84,7 +84,7 @@ void track_straight() {
   }
   if (front_right == 1 && front_left == 1){
     // straight_iterations = 0;
-    mot_straight();
+    mot_straight(speed);
     log("Straight line", LOG_LOW);
   }
 
@@ -212,7 +212,7 @@ void right_turn() {
 
 // TODO: test blinking led here
 void stop_in_the_box() {
-  mot_straight();
+  mot_straight(STRAIGHT_SPEED);
   delay(STOPPING_TIME);
   mot_stop();
 }
