@@ -15,7 +15,7 @@
 
 #define STOPPING_TIME 1100
 
-#define STATE_ITERATION_LIMIT 150
+#define STATE_ITERATION_LIMIT 500
 
 
 SensorValue read_sensors(){
@@ -90,29 +90,8 @@ void track_straight(int speed) {
 
   blink_movement_led();
 
-  // if (straight_iterations == WIGGLE_FRONTIER) {
-  //   if (wiggle_check()) {
-  //     // PANIC!!!!!!!!!!!!!
-  //     delay(5000);
-  //   }
-  //   straight_iterations = 0;
-  // }
 }
 
-// bool detect_left_turn() {
-//   sv = read_sensors();
-//   return (bool)sv.back_left;
-// }
-
-// bool detect_right_turn() {
-//   sv = read_sensors();
-//   return (bool)sv.back_right;
-// }
-
-// bool detect_straight() {
-//   sv = read_sensors();
-//   return (bool)(sv.back_left or sv.back_right);
-// }
 
 bool read_left_junction_sensor() {
   return digitalRead(BLPIN);
@@ -216,22 +195,3 @@ void stop_in_the_box() {
   delay(STOPPING_TIME);
   mot_stop();
 }
-
-// // Checks that the line is between the sensors
-// bool wiggle_check() {
-//   log("Starting wiggle", LOG_HIGH);
-//   bool panic = false;
-//   mot_turn_left(WIGGLE_SPEED);
-//   delay(WIGGLE_TIME);
-//   mot_stop();
-//   panic = !ls2;
-//   mot_turn_right(WIGGLE_SPEED);
-//   delay(2 * WIGGLE_TIME);
-//   mot_stop();
-//   panic = panic || !ls3;
-//   mot_turn_left(WIGGLE_SPEED);
-//   delay(WIGGLE_TIME);
-//   mot_stop();
-//   log("Wiggle result: panic = " + panic, LOG_HIGH);
-//   return panic;
-// }

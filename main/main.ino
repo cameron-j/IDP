@@ -41,7 +41,15 @@ void loop() {
 
 
   if (run) {
+    //navigate("RB");
     fetchAllTheBlocks();
+    delay(5000);
+    // for (int _ = 0; _ < 5; _++) {
+    //   left_turn();
+    //   delay(100);
+    //   right_turn();
+    //   delay(100);
+    // }
     run = false;
   }
 

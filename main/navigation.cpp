@@ -11,15 +11,16 @@
 #define LOCATION_GREEN 2
 #define RED 0
 #define BLACK 1
-#define STRAIGHT_ITERATIONS 5000
-#define ZONE_REVERSE_TIME 1000
-#define PICKUP_REVERSE_TIME 1000
-#define APPROACH_SPEED 125
+#define STRAIGHT_ITERATIONS 10000
+#define ZONE_REVERSE_TIME 500
+#define PICKUP_REVERSE_TIME 700
 
 bool instruction_executed;
 
 bool left_junction_sensor;
 bool right_junction_sensor;
+
+int dist_to_block = -1;
 
 void navigate (String commands) {
     int counter = 0;
@@ -53,24 +54,27 @@ void navigate (String commands) {
                 }
                 break;
             case 'B':
-              prepare_for_grab();
-              if (check_block_distance()) {
-                mot_straight(APPROACH_SPEED);
-                delay(450);
-                mot_stop();
-                delay(10000000000);
-                // mot_straight(APPROACH_SPEED);
-                // delay(500);
-                // mot_stop();
-                // grab_block();
-                // blink_LED(detect_colour());
-                // mot_reverse();
-                // delay(600);
-                // left_turn();
-                // instruction_executed = true;
-                // log("B", LOG_HIGH);
+              dist_to_block = -1;
+              //prepare_for_grab();
+              // track_straight(APPROACH_SPEED);
+              while (dist_to_block == -1) {
+                track_straight(STRAIGHT_SPEED);
+                dist_to_block = check_block_distance();
+                log("distance" + (String)dist_to_block, LOG_HIGH);
               }
-                break;
+              mot_stop();
+              delay(200);
+              mot_straight(APPROACH_SPEED);
+              delay(800 * dist_to_block / GRABBING_DISTANCE);
+              mot_stop();
+              grab_block();
+              blink_LED(detect_colour());
+              mot_reverse();
+              delay(400);
+              left_turn();
+              instruction_executed = true;
+              log("B", LOG_HIGH);
+              break;
             case 'X': //green zone
             if (left_crash_activated() && right_crash_activated()) {
               mot_stop();

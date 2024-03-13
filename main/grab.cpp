@@ -3,16 +3,18 @@
 #include <Servo.h>  //include servo library
 #include "logging.h"
 #include "motor_control.h"
+#include "line_following.h"
+#include "navigation.h"
 
 #define ULTRASOUND_PIN A3
 #define LEFT_CRASH_PIN 2
 #define RIGHT_CRASH_PIN 9
 
 #define SERVO_DELAY 30
-#define OPEN_POSITION 100
+#define OPEN_POSITION 120
 #define CLOSED_POSITION 0
 #define DEPOSIT_POSITION 180
-#define PICKUP_POSITION 80
+#define PICKUP_POSITION 120
 
 Servo servo;  // create servo object to control a servo
 int dist_t = 20;
@@ -37,12 +39,16 @@ void prepare_for_grab() {
 }
 
 void grab_block(){
-   for (position = PICKUP_POSITION; position >= CLOSED_POSITION; position --) { // goes from open to closed positions in steps of 1 degree     
-    servo.write(position);
-    delay(SERVO_DELAY);
-    log("Angle " + (String)position, LOG_MID);
+  mot_straight(APPROACH_SPEED);
+  if (check_block_distance() < 7){
+    mot_stop();
+  for (position = PICKUP_POSITION; position >= CLOSED_POSITION; position --) { // goes from open to closed positions in steps of 1 degree     
+      servo.write(position);
+      delay(SERVO_DELAY);
+      log("Angle " + (String)position, LOG_MID);
    }
-   grab_ready = false;
+  }
+  grab_ready = false;
 }
 
 void deposit_block() { // for final version: change OPEN_POSITION to DEPOSIT_POSITION ?? maybe not
@@ -67,14 +73,13 @@ void deposit_block() { // for final version: change OPEN_POSITION to DEPOSIT_POS
   //  delay(150);
 }
 
-
-bool check_block_distance(){
+float check_block_distance(){
   ultrasound_t = analogRead(ULTRASOUND_PIN);
   dist_t = ultrasound_t * MAX_RANGE  / ADC_SOLUTION;   
   if (dist_t < GRABBING_DISTANCE){
-    return true;
+    return dist_t;
   }
-  return false;
+  return -1;
 }
 
 bool left_crash_activated() {
