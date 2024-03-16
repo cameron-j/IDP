@@ -22,6 +22,7 @@ bool right_junction_sensor;
 
 int dist_to_block = -1;
 
+// Executes a string of given commands.
 void navigate (String commands) {
     int counter = 0;
     bool run = true;
@@ -33,26 +34,36 @@ void navigate (String commands) {
         right_junction_sensor = read_right_junction_sensor();
 
         switch (commands[counter]) {
+            // Go straight at a junction
             case 'F':
-                if (left_junction_sensor || right_junction_sensor) {
-                  instruction_executed = true;
-                  log("F", LOG_HIGH);
-                }
-                break;
+              if (left_junction_sensor || right_junction_sensor) {
+                instruction_executed = true;
+                log("F", LOG_HIGH);
+              }
+
+              break;
+
+            // Turn left at a junction
             case 'L':
-                if (left_junction_sensor) {
-                  left_turn();
-                  instruction_executed = true;
-                  log("L", LOG_HIGH);
-                }
-                break;
+              if (left_junction_sensor) {
+                left_turn();
+                instruction_executed = true;
+                log("L", LOG_HIGH);
+              }
+
+              break;
+
+            // Turn right at a junction
             case 'R':
-                if (right_junction_sensor) {
-                  right_turn();
-                  instruction_executed = true;
-                  log("R", LOG_HIGH);
-                }
-                break;
+              if (right_junction_sensor) {
+                right_turn();
+                instruction_executed = true;
+                log("R", LOG_HIGH);
+              }
+
+              break;
+
+            // Stop and pick up a block, then detect block colour, then indicate block colour with the respective LED, then turn around.
             case 'B':
               dist_to_block = -1;
               //prepare_for_grab();
@@ -74,42 +85,52 @@ void navigate (String commands) {
               left_turn();
               instruction_executed = true;
               log("B", LOG_HIGH);
+
               break;
-            case 'X': //green zone
-            if (left_crash_activated() && right_crash_activated()) {
-              mot_stop();
-              deposit_block();
 
-              mot_reverse();
-              delay(ZONE_REVERSE_TIME);
-              mot_stop();
+            // Detect the green drop zone, then deposit the block, then reverse a short distance, then turn around.
+            case 'X':
+              if (left_crash_activated() && right_crash_activated()) {
+                mot_stop();
+                deposit_block();
 
-              left_turn();
-              instruction_executed = true;
-              log("Z", LOG_HIGH);
-            }
-                break;
-            case 'Y': //red zone
-            if (left_crash_activated() && right_crash_activated()) {
-              mot_stop();
-              deposit_block();
+                mot_reverse();
+                delay(ZONE_REVERSE_TIME);
+                mot_stop();
 
-              mot_reverse();
-              delay(ZONE_REVERSE_TIME);
-              mot_stop();
+                left_turn();
+                instruction_executed = true;
+                log("Z", LOG_HIGH);
+              }
 
-              right_turn();
-              instruction_executed = true;
-              log("Z", LOG_HIGH);
-            }
-                break;                
+              break;
+
+            // Same as X but for the red zone.
+            case 'Y':
+              if (left_crash_activated() && right_crash_activated()) {
+                mot_stop();
+                deposit_block();
+
+                mot_reverse();
+                delay(ZONE_REVERSE_TIME);
+                mot_stop();
+
+                right_turn();
+                instruction_executed = true;
+                log("Z", LOG_HIGH);
+              }
+
+              break;
+
+            // Stops the robot within the start/finish box.
             case 'S':
-                if (left_junction_sensor && right_junction_sensor) {
-                  stop_in_the_box();
-                  log("S", LOG_HIGH);
-                  return;
-                }
-                break;
+              if (left_junction_sensor && right_junction_sensor) {
+                stop_in_the_box();
+                log("S", LOG_HIGH);
+                return;
+              }
+
+              break;
         }
 
         if (instruction_executed) {
@@ -121,9 +142,8 @@ void navigate (String commands) {
     }
 }
 
-// from location go to block and return to drop location
+// Contains strings relating to each possible path of the robot and selects the correct string to execute based on block colour (for navigating to zones), or current position and number of blocks collected (for navigating to blocks).
 int fetchBlock (int location, int block) {
-
     // empty strings to block 0 as this is always accessed from start box
     String fromRedToBlock[BLOCK_COUNT] = {"","FLLB","FLFRFRRB","FLFRLB"};
     String fromGreenToBlock[BLOCK_COUNT] = {"","FRFRB","FRLFRRB","FRLLB"};
@@ -131,11 +151,10 @@ int fetchBlock (int location, int block) {
     String fromBlockToRed[BLOCK_COUNT] = {"LFRY","RRFY","LLFLFRFY","RLFRFY"};
     String fromBlockToGreen[BLOCK_COUNT] = {"RLX","LFLFX","LLFRLFX","RRLFX"};
 
-    // add some logging here?
-
     if (location == LOCATION_START) {
       log("I'm at the start", LOG_HIGH);
-      navigate("FLRB"); // from start to block 0
+      // from start to block 0
+      navigate("FLRB");
     }
     if (location == LOCATION_RED) {
       log("I'm at the red zone", LOG_HIGH);
@@ -161,6 +180,7 @@ int fetchBlock (int location, int block) {
     return colour == RED ? LOCATION_RED : LOCATION_GREEN;
 }
 
+// Uses fetchBlock (int location, int block) to complete the entire task.
 void fetchAllTheBlocks() {
     int location = LOCATION_START;
 
@@ -168,8 +188,8 @@ void fetchAllTheBlocks() {
         location = fetchBlock(location, block);
 
     // return to start
-    if (location == LOCATION_RED) 
+    if (location == LOCATION_RED)
         navigate("LLS"); // from red to start
-    else 
+    else
         navigate("RFRS"); // from green to start
 }

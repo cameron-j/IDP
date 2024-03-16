@@ -1,5 +1,4 @@
 #pragma once
-#include "map.h"
 
 #define RED 0
 #define BLACK 1

@@ -1,4 +1,3 @@
-#include "map.h"
 #include "motor_control.h"
 #include "line_following.h"
 #include "logging.h"
@@ -15,41 +14,32 @@
 // Pins
 #define BUTTON_PIN 9
 
-
 // Button input
 int button_status;
 int prev_button_status = 1;
 bool run = false;
 
-// the setup function runs once when you press reset or power the board
 void setup() {
   log_init(LOG_MID);
   mot_init();
+  grab_init();
+
+  // Wheels spin to indicate that code has uploaded successfully
   mot_straight(STRAIGHT_SPEED);
   log("Running Straight", LOG_HIGH);
   delay(100);
   mot_stop();
-  grab_init();
 }
 
-// the loop function runs over and over again forever
 void loop() {
+  // When button is pressed, run is toggled
   button_status = digitalRead(BUTTON_PIN);
   if (button_status == 0 && prev_button_status == 1) {
     run = !run;
   }
 
-
   if (run) {
-    //navigate("RB");
     fetchAllTheBlocks();
-    delay(5000);
-    // for (int _ = 0; _ < 5; _++) {
-    //   left_turn();
-    //   delay(100);
-    //   right_turn();
-    //   delay(100);
-    // }
     run = false;
   }
 

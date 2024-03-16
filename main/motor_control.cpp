@@ -15,6 +15,7 @@ Adafruit_DCMotor *leftmotor;
 Adafruit_DCMotor *rightmotor;
 Adafruit_MotorShield AFMS;
 
+// Runs both motors forward at a given speed.
 void mot_straight(int speed) {
   if (current_state != STATE_STRAIGHT) {
     leftmotor->setSpeed(speed);
@@ -26,6 +27,7 @@ void mot_straight(int speed) {
   }
 }
 
+// Runs both motors backward at a given speed.
 void mot_reverse() {
   if (current_state != STATE_REVERSE) {
     leftmotor->setSpeed(REVERSE_SPEED);
@@ -37,6 +39,7 @@ void mot_reverse() {
   }
 }
 
+// Stops both motors. Also uses movement_led_off() to stop the blue flashing LED.
 void mot_stop() {
   if (current_state != STATE_STOP) {
     movement_led_off();
@@ -47,6 +50,7 @@ void mot_stop() {
   }
 }
 
+// Runs the left motor forward and the right motor backward at a given speed.
 void mot_turn_right() {
   if (current_state != STATE_TURN_RIGHT) {
     leftmotor->setSpeed(TURN_SPEED);
@@ -58,6 +62,7 @@ void mot_turn_right() {
   }
 }
 
+// Runs the left motor backward and the right motor forward at a given speed.
 void mot_turn_left() {
   if (current_state != STATE_TURN_LEFT) {
     leftmotor->setSpeed(TURN_SPEED);
@@ -69,7 +74,7 @@ void mot_turn_left() {
   }
 }
 
-
+// Runs the left motor at a given lower speed and the right motor at a given higher speed.
 void mot_correct_to_left() {
   if (current_state != STATE_CORRECT_LEFT) {
     leftmotor -> setSpeed(CORRECTION_LOW_SPEED);
@@ -81,6 +86,7 @@ void mot_correct_to_left() {
   }
 }
 
+// Runs the left motor at a given higher speed and the right motor at a given lower speed.
 void mot_correct_to_right() {
   if (current_state != STATE_CORRECT_RIGHT) {
     leftmotor -> setSpeed(CORRECTION_HIGH_SPEED);
@@ -92,16 +98,19 @@ void mot_correct_to_right() {
   }
 }
 
+// Sets speed of right motor
 void set_rightmotor_speed(int speed) {
   rightmotor -> setSpeed(speed);
 }
 
+// Sets speed of left motor
 void set_leftmotor_speed(int speed) {
   leftmotor -> setSpeed(speed);
 }
 
+// Initialises the motors to their respective inputs on the Arduino board.
 void mot_init() {
-  AFMS = Adafruit_MotorShield(); 
+  AFMS = Adafruit_MotorShield();
   leftmotor = AFMS.getMotor(1);
   rightmotor = AFMS.getMotor(2);
   AFMS.begin();

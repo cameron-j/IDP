@@ -1,5 +1,4 @@
 #pragma once
-
 #include <Wire.h>
 #include <Adafruit_MotorShield.h>
 #include "utility/Adafruit_MS_PWMServoDriver.h"
@@ -19,5 +18,4 @@ void mot_correct_to_left();
 void mot_correct_to_right();
 void set_rightmotor_speed(int speed);
 void set_leftmotor_speed(int speed);
-int get_speed();
 void mot_init();
